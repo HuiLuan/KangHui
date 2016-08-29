@@ -1,0 +1,46 @@
+﻿@using KangHui.Web.Models
+@model  IEnumerable<YueBao>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body style="margin: 0;padding: 0">
+<div class="row" style="margin-top: 5px">
+    <div class="com col-xs-3"><input type="button" onclick="changeview('riqi')" value="日期"/>
+    </div>
+    <div class="com col-xs-3"><input type="button" onclick="changeview('kehu')" value="客户"/>
+    </div>
+    <div class="com col-xs-3"><input type="button" onclick="changeview('yewuyuan')" value="业务员"/>
+    </div>
+    <div class="com col-xs-3"><input type="button" onclick="changeview('chanpin')" value="产品"/>
+    </div>
+</div>
+    
+    <div style="margin-top: 5px" id="listContainer">
+        @Html.Partial("YueBaoRiQi", (object)Model)
+    </div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script type="text/javascript">
+    function changeview(viewname) {
+        $.ajax({
+            url: '/Default/YueBaoItem?viewtype='+viewname,
+            data: {},
+            cache: false,
+        }).done(function (result) {
+            $("#listContainer").html(result);
+        });
+    }
+</script>
+</body>
+</html>

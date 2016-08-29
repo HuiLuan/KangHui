@@ -1,0 +1,11 @@
+﻿@using KangHui.Web.Models
+@model IEnumerable<YueBao>
+<table class="table table-bordered table-condensed">
+    <tr><th>业务员</th><th>销售量</th><th>销售额</th><th>同比</th><th>环比</th></tr>
+    @foreach (YueBao yueBao in (IEnumerable<YueBao>)Model)
+    {
+        <tr><td>@yueBao.业务员 </td><td>@yueBao.销售量</td><td>@yueBao.销售额</td><td>@yueBao.同比</td><td>@yueBao.环比</td></tr>
+    }
+</table>
+
+

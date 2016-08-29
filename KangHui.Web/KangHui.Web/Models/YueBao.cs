@@ -8,7 +8,7 @@ namespace KangHui.Web.Models
     public class YueBao
     {
         public long Id { get; set; }
-        public string 日期 { get; set; }
+        public DateTime 日期 { get; set; }
         public string 客户 { get; set; }
         public string 业务员 { get; set; }
         public string 产品 { get; set; }

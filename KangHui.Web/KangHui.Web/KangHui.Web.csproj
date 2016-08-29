@@ -167,6 +167,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\121.42.136.226.pubxml" />
+    <None Include="Properties\PublishProfiles\198.11.175.52.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -197,6 +199,11 @@
     <Content Include="Views\Default\JianBaoItems.cshtml" />
     <Content Include="Views\Default\KuCunIndex.cshtml" />
     <Content Include="Views\Default\KuCunItems.cshtml" />
+    <Content Include="Views\Default\YueBaoIndex.cshtml" />
+    <Content Include="Views\Default\YueBaoKeHu.cshtml" />
+    <Content Include="Views\Default\YueBaoYeWuYuan.cshtml" />
+    <Content Include="Views\Default\YueBaoChanPin.cshtml" />
+    <Content Include="Views\Default\YueBaoRiQi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

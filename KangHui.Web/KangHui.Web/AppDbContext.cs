@@ -24,6 +24,7 @@ namespace KangHui.Web
 
         public virtual DbSet<JianBao> JianBao { get; set; }
         public virtual DbSet<KuCun> KuCun { get; set; }
+        public virtual DbSet<YueBao> YueBao { get; set; }
 
 
     }

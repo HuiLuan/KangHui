@@ -1,0 +1,11 @@
+﻿@using KangHui.Web.Models
+@model List<KuCun>
+
+<table class="table table-bordered table-condensed">
+    <tr><th>产品</th><th>库存</th><th>订货</th><th>采购</th><th>差异</th></tr>
+    @foreach (KuCun kuCun in (List<KuCun>)Model)
+    {
+        <tr><td>@kuCun.产品 </td><td>@kuCun.库存</td><td>@kuCun.订货</td><td>@kuCun.采购</td><td>@kuCun.差异</td></tr>
+    }
+</table>
+
