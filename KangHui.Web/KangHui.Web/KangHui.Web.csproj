@@ -153,6 +153,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\JianBao.cs" />
+    <Compile Include="Models\KuCun.cs" />
+    <Compile Include="Models\Maps\JianBaoMap.cs" />
+    <Compile Include="Models\YueBao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +194,9 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Default\JianBaoIndex.cshtml" />
+    <Content Include="Views\Default\JianBaoItems.cshtml" />
+    <Content Include="Views\Default\KuCunIndex.cshtml" />
+    <Content Include="Views\Default\KuCunItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

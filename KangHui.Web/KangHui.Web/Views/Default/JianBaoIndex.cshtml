@@ -1,17 +1,50 @@
-﻿@{
+﻿@model List<KangHui.Web.Models.JianBao>
+@{
     Layout = null;
 }
 
 <!DOCTYPE html>
 
-<html>
+<html >
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
-    <div>
-    
+<body style="margin: 0; padding: 0">
+<div class="container" style="width: 100%">
+    <div class="row">
+        <div class="col-xs-5"></div>
+        <div class="col-xs-5">简报</div>
+@*        <div class="col-xs-2">*@
+@*            <input type="button" value="查询" onclick="aaa()"/>*@
+@*        </div>*@
+
+        <script type="text/javascript">
+            function aaa() {
+                $.ajax({
+                    url: '/Default/JianBaoIndex?start=&end=',
+                    data: {},
+                    cache: false,
+                }).done(function(result) {
+                    $("#listContainer").html(result);
+                });
+            }
+        </script>
     </div>
+</div>
+<br/>
+        <form action="JianBaoIndex" data-ajax="true" data-ajax-mode="replace" data-ajax-success="" data-ajax-update="#listContainer" id="searchForm"></form>
+
+        <div id="listContainer">
+            @Html.Partial("JianBaoItems", (object)Model)
+        </div>
+
+
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
 </body>
 </html>

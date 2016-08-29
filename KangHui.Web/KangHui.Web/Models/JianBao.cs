@@ -8,7 +8,8 @@ namespace KangHui.Web.Models
     public class JianBao
     {
         public long Id { get; set; }
-
+        public DateTime RiQi { get; set; }
+        public DateTime CreateTime { get; set; }
         public int FangMiaoZhiShu { get; set; }
         public int HuiShouZhiShu { get; set; }
         public decimal? JiMiaoJiaGe { get; set; }
