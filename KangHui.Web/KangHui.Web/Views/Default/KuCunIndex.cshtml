@@ -11,20 +11,42 @@
     <title></title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.min.js"></script>
+    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.ie8polyfill.min.js"></script>
+    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.widgets.helper.min.js"></script>
 </head>
 <body style="margin: 0; padding: 0">
 <div class="container" style="width: 100%">
     <div class="row">
         <div class="col-xs-5"></div>
         <div class="col-xs-5">库存</div>
-@*        <div class="col-xs-2">*@
-@*            <input type="button" value="查询" onclick="aaa()"/>*@
-@*        </div>*@
+        <div class="col-xs-2">
+            <input type="button" class="am-btn am-btn-primary" value="查询"  data-am-modal="{target: '#my-alert'}"/>
+        </div>
+
+        <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">查询条件</div>
+              
+                <div class="am-modal-bd">
+                   产品：@Html.DropDownList("goodslist", String.Empty)
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn" onclick="refreshdata()">确定</span>
+                </div>
+            </div>
+        </div>
+
 
         <script type="text/javascript">
-            function aaa() {
+            function refreshdata() {
                 $.ajax({
-                    url: '/Default/JianBaoIndex?start=&end=',
+                    url: '/Default/KuCunIndex?&goods=' + $("#goodslist option:selected").text(),
                     data: {},
                     cache: false,
                 }).done(function(result) {
@@ -41,10 +63,5 @@
             @Html.Partial("KuCunItems", (object)Model)
         </div>
 
-
-
-
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
 </body>
 </html>

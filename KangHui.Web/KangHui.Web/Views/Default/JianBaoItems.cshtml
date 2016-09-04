@@ -1,11 +1,21 @@
 ﻿@using KangHui.Web.Models
 @model List<JianBao>
-
 <table class="table table-bordered table-condensed">
     <tr><th>日期</th><th>放苗只数</th><th>回收只数</th><th>鸡苗单价</th><th>回收单价</th></tr>
-    @foreach (JianBao jianBao in (List<JianBao>)Model)
-    {
-        <tr><td>@jianBao.RiQi.ToString("yyyy-MM-dd") </td><td>@jianBao.FangMiaoZhiShu</td><td>@jianBao.HuiShouZhiShu</td><td>@jianBao.JiMiaoJiaGe</td><td>@jianBao.HuiShouJiaGe</td></tr>
+    @{
+        int index = 0;
+        foreach (JianBao jianBao in (List<JianBao>)Model)
+        {
+            index++;
+            if (index % 2 == 0)
+            {
+                <tr class="success"><td>@jianBao.RiQi.ToString("yyyy-MM-dd") </td><td>@jianBao.FangMiaoZhiShu</td><td>@jianBao.HuiShouZhiShu</td><td>@jianBao.JiMiaoJiaGe</td><td>@jianBao.HuiShouJiaGe</td></tr>
+            }
+            else
+            {
+                <tr><td>@jianBao.RiQi.ToString("yyyy-MM-dd") </td><td>@jianBao.FangMiaoZhiShu</td><td>@jianBao.HuiShouZhiShu</td><td>@jianBao.JiMiaoJiaGe</td><td>@jianBao.HuiShouJiaGe</td></tr>
+            }
+        }
     }
-</table>
 
+</table>

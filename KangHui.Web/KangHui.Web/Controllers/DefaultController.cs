@@ -58,26 +58,32 @@ namespace KangHui.Web.Controllers
             }
             if (end.HasValue)
             {
-                list = list.Where(x => x.RiQi < end.Value.AddDays(1));
+                var enddate = end.Value.AddDays(1);
+                list = list.Where(x => x.RiQi < enddate);
             }
 
             var data = list.ToList();
             if (Request.IsAjaxRequest())
             {
                 
-                return PartialView("JianBaoItems", list.Skip(1).Take(1).ToList());
+                return PartialView("JianBaoItems", list.ToList());
             }
             return View(data);
         }
 
 
-        public ActionResult KuCunIndex(string chanpin)
+        public ActionResult KuCunIndex(string goods)
         {
+
+            var storeQuery = from d in db.KuCun select  d ;
+            ViewBag.goodslist = new SelectList(storeQuery.Distinct(), "产品", "产品");
+
             IQueryable<KuCun> list = db.KuCun.OrderByDescending(x => x.Id);
-            if (!string.IsNullOrEmpty(chanpin))
+            if (!string.IsNullOrEmpty(goods))
             {
-                list = list.Where(x => x.产品==chanpin);
+                list = list.Where(x => x.产品== goods);
             }
+          
             var data = list.ToList();
             if (Request.IsAjaxRequest())
             {

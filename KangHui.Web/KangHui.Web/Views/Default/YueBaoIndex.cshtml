@@ -12,16 +12,22 @@
     <title></title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.min.js"></script>
+    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.ie8polyfill.min.js"></script>
+    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.widgets.helper.min.js"></script>
 </head>
 <body style="margin: 0;padding: 0">
 <div class="row" style="margin-top: 5px">
-    <div class="com col-xs-3"><input type="button" onclick="changeview('riqi')" value="日期"/>
+    <div class="com col-xs-3"><input  class="am-btn am-btn-primary" type="button" onclick="changeview('riqi')" value="日期"/>
     </div>
-    <div class="com col-xs-3"><input type="button" onclick="changeview('kehu')" value="客户"/>
+    <div class="com col-xs-3"><input  class="am-btn am-btn-primary" type="button" onclick="changeview('kehu')" value="客户"/>
     </div>
-    <div class="com col-xs-3"><input type="button" onclick="changeview('yewuyuan')" value="业务员"/>
+    <div class="com col-xs-3"><input  class="am-btn am-btn-primary" type="button" onclick="changeview('yewuyuan')" value="业务员"/>
     </div>
-    <div class="com col-xs-3"><input type="button" onclick="changeview('chanpin')" value="产品"/>
+    <div class="com col-xs-3"><input  class="am-btn am-btn-primary" type="button" onclick="changeview('chanpin')" value="产品"/>
     </div>
 </div>
     
@@ -29,8 +35,6 @@
         @Html.Partial("YueBaoRiQi", (object)Model)
     </div>
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
 <script type="text/javascript">
     function changeview(viewname) {
         $.ajax({

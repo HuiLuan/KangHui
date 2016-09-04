@@ -3,9 +3,22 @@
 
 <table class="table table-bordered table-condensed">
     <tr><th>产品</th><th>库存</th><th>订货</th><th>采购</th><th>差异</th></tr>
-    @foreach (KuCun kuCun in (List<KuCun>)Model)
-    {
-        <tr><td>@kuCun.产品 </td><td>@kuCun.库存</td><td>@kuCun.订货</td><td>@kuCun.采购</td><td>@kuCun.差异</td></tr>
+    @{
+
+        int index = 0;
+        foreach (KuCun kuCun in (List<KuCun>)Model)
+        {
+            index++;
+            if (index%2 == 0)
+            {
+                <tr class="success"><td>@kuCun.产品 </td><td>@kuCun.库存</td><td>@kuCun.订货</td><td>@kuCun.采购</td><td>@kuCun.差异</td></tr>
+            }
+            else
+            {
+                <tr><td>@kuCun.产品 </td><td>@kuCun.库存</td><td>@kuCun.订货</td><td>@kuCun.采购</td><td>@kuCun.差异</td></tr>
+            }
+        }
     }
+   
 </table>
 
