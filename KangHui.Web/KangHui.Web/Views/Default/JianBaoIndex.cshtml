@@ -10,73 +10,56 @@
     <meta name="viewport" content="width=device-width" />
     <title></title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet" />
+    <link href="~/Content/mui.min.css" rel="stylesheet"/>
+    <link href="~/Content/app.css" rel="stylesheet" />
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-migrate")
-    @Scripts.Render("~/bundles/bootstrap")
-    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.min.js"></script>
-    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.ie8polyfill.min.js"></script>
-    <script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.widgets.helper.min.js"></script>
+    <script src="~/Scripts/mui.min.js"></script>
+
+
+    <style>
+        html,
+        body {
+            background-color: #efeff4;
+        }
+
+        .mui-bar .mui-pull-left .mui-icon {
+            padding-right: 5px;
+            font-size: 28px;
+        }
+
+        .mui-bar .mui-btn {
+            font-weight: normal;
+            font-size: 17px;
+        }
+
+        .mui-bar .mui-btn-link {
+            top: 1px;
+        }
+    </style>
 
 </head>
 <body style="margin: 0; padding: 0">
 
-        <div class="row" style="margin-top: 0 !important">
-            <div class="col-xs-5"></div>
-            <div class="col-xs-4">简报</div>
-            <div class="col-xs-2">
-                <input type="button"  value="查询" class="am-btn am-btn-primary" data-am-modal="{target: '#my-alert'}" />
-            </div>
+<header id="header" class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">简报</h1>
+    <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">查询</button>
+</header>
+       
+    <div class="mui-content">
 
-            <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
-                <div class="am-modal-dialog">
-                    <div class="am-modal-hd">查询条件</div>
-                    <div class="am-modal-bd">
-                        <input id="start-date" value="" type="text" class="am-form-field" placeholder="开始时间"  readonly />
-                    </div>
-                    <div class="am-modal-bd">
-                        <input id="end-date" type="text" class="am-form-field" placeholder="结束时间" data-am-datepicker readonly required />
-                    </div>
-                    <div class="am-modal-footer">
-                        <span class="am-modal-btn" onclick="refreshdata()">确定</span>
-                    </div>
-                </div>
+        <form action="JianBaoIndex" data-ajax="true" data-ajax-mode="replace" data-ajax-success="" data-ajax-update="#listContainer" id="searchForm"></form>
 
-
-            <script type="text/javascript">
-                $(function() {
-                    $('#start-date').datepicker();
-                });
-                function refreshdata() {
-                    $.ajax({
-                        url: '/Default/JianBaoIndex?start=' + $("#start-date").val() + '&end='+$("#end-date").val(),
-                        data: {},
-                        cache: false,
-                    }).done(function (result) {
-                        $("#listContainer").html(result);
-                        cleardate();
-                    });
-                }
-
-                function cleardate() {
-//                    $("#start-date").val();
-//                    $("#end-date").val();
-                }
-            </script>
+        <div  id="listContainer">
+            @Html.Partial("JianBaoItems", (object) Model)
         </div>
-    </div>
-    <br />
-    <form action="JianBaoIndex" data-ajax="true" data-ajax-mode="replace" data-ajax-success="" data-ajax-update="#listContainer" id="searchForm"></form>
 
-    <div style="width: 100%" id="listContainer">
-        @Html.Partial("JianBaoItems", (object)Model)
-    </div>
+        </div>
 
 
 
 
-   
+
 </body>
 </html>

@@ -11,6 +11,10 @@ namespace KangHui.Web.Controllers
     {
         AppDbContext db=new AppDbContext();
 
+        public ActionResult Mui()
+        {
+            return View();
+        }
 
         public ActionResult YueBaoIndex()
         {
