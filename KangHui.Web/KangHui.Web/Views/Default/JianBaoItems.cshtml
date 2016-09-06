@@ -1,7 +1,7 @@
 ﻿@using KangHui.Web.Models
 @model List<JianBao>
 <table id="gudingtable" class="table table-bordered table-condensed"  style="-moz-min-width: 480px; -ms-min-width: 480px; -o-min-width: 480px; -webkit-min-width: 480px; min-width: 480px;">
-    <tr><th>日期</th><th>放苗只数</th><th>回收只数</th><th>鸡苗单价</th><th>回收单价</th></tr>
+    <tr class="active"><th>日期</th><th>放苗只数</th><th>回收只数</th><th>鸡苗单价</th><th>回收单价</th></tr>
     @{
         int index = 0;
         foreach (JianBao jianBao in (List<JianBao>) Model)
@@ -13,7 +13,7 @@
             }
             else
             {
-                <tr><td>@jianBao.RiQi.ToString("yyyy-MM-dd") </td><td>@jianBao.FangMiaoZhiShu</td><td>@jianBao.HuiShouZhiShu</td><td>@jianBao.JiMiaoJiaGe</td><td>@jianBao.HuiShouJiaGe</td></tr>
+                <tr class="active"><td>@jianBao.RiQi.ToString("yyyy-MM-dd") </td><td>@jianBao.FangMiaoZhiShu</td><td>@jianBao.HuiShouZhiShu</td><td>@jianBao.JiMiaoJiaGe</td><td>@jianBao.HuiShouJiaGe</td></tr>
             }
         }
     }
@@ -91,9 +91,9 @@
             $("#" + TableID + "_tableHead").scrollLeft($("#" + TableID + "_tableData").scrollLeft());
             $("#" + TableID + "_tableColumn").scrollTop($("#" + TableID + "_tableData").scrollTop());
         });
-        $("#" + TableID + "_tableFix").css({ "overflow": "hidden", "position": "relative", "z-index": "50", "background-color": "Silver" });
-        $("#" + TableID + "_tableHead").css({ "overflow": "hidden", "width": width , "position": "relative", "z-index": "45", "background-color": "Silver" });
-        $("#" + TableID + "_tableColumn").css({ "overflow": "hidden", "height": height, "position": "relative", "z-index": "40", "background-color": "Silver" });
+        $("#" + TableID + "_tableFix").css({ "overflow": "hidden", "position": "relative", "z-index": "50" });
+        $("#" + TableID + "_tableHead").css({ "overflow": "hidden", "width": width , "position": "relative", "z-index": "45"});
+        $("#" + TableID + "_tableColumn").css({ "overflow": "hidden", "height": height, "position": "relative", "z-index": "40" });
         $("#" + TableID + "_tableData").css({ "overflow": "scroll", "width": width, "height": height, "position": "relative", "z-index": "35" });
         if ($("#" + TableID + "_tableHead").width() > $("#" + TableID + "_tableFix table").width()) {
             $("#" + TableID + "_tableHead").css("width", $("#" + TableID + "_tableFix table").width());

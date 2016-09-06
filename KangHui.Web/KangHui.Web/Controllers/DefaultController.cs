@@ -70,7 +70,7 @@ namespace KangHui.Web.Controllers
             if (Request.IsAjaxRequest())
             {
                 
-                return PartialView("JianBaoItems", list.ToList());
+                return PartialView("JianBaoItems", data);
             }
             return View(data);
         }

@@ -4,43 +4,459 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0.5,maximum-scale=2.0,user-scalable=0,height=device-width" />
     <title></title>
-    <!-- load MUI -->
-    <link href="~/Content/mui.min.css" rel="stylesheet" />
-    <script src="~/Scripts/mui.min.js"></script>
     <style>
-        html,
         body {
-            background-color: #efeff4;
+            margin: 0;
+            padding: 0;
+            font-size: 10px;
         }
 
-        .mui-bar .mui-pull-left .mui-icon {
-            padding-right: 5px;
-            font-size: 28px;
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border-left: 1px solid #888;
+            border-top: 1px solid #888;
         }
 
-        .mui-bar .mui-btn {
-            font-weight: normal;
-            font-size: 17px;
+        th, td {
+            border-right: 1px solid #888;
+            border-bottom: 1px solid #888;
+            padding: 5px 5px;
         }
 
-        .mui-bar .mui-btn-link {
-            top: 1px;
+        th {
+            font-weight: bold;
         }
     </style>
+
+
+
+    <link href="http://192.168.1.228:2000/MainSystem/html/css/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="http://192.168.1.228:2000/MainSystem/html/javascript/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="http://192.168.1.228:2000/MainSystem/html/javascript/jquery-migrate-1.4.1.min.js"></script>
+    <script type="text/javascript" src="http://192.168.1.228:2000/MainSystem/html/javascript/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+        function FixTable(TableID, FixColumnNumber, width, height) {
+            /// <summary>
+            ///     锁定表头和列
+            ///     <para> http://blog.csdn.net/SongYanJun2011 </para>
+            /// </summary>
+            /// <param name="TableID" type="String">
+            ///     要锁定的Table的ID
+            /// </param>
+            /// <param name="FixColumnNumber" type="Number">
+            ///     要锁定列的个数
+            /// </param>
+            /// <param name="width" type="Number">
+            ///     显示的宽度
+            /// </param>
+            /// <param name="height" type="Number">
+            ///     显示的高度
+            /// </param>
+            if ($("#" + TableID + "_tableLayout").length != 0) {
+                $("#" + TableID + "_tableLayout").before($("#" + TableID));
+                $("#" + TableID + "_tableLayout").empty();
+            }
+            else {
+                $("#" + TableID).after("<div id='" + TableID + "_tableLayout' style='overflow:hidden;height:" + height + "px; width:" + width + "px;'></div>");
+            }
+            $('<div id="' + TableID + '_tableFix"></div>'
+                + '<div id="' + TableID + '_tableHead"></div>'
+                + '<div id="' + TableID + '_tableColumn"></div>'
+                + '<div id="' + TableID + '_tableData"></div>').appendTo("#" + TableID + "_tableLayout");
+            var oldtable = $("#" + TableID);
+            var tableFixClone = oldtable.clone(true);
+            tableFixClone.attr("id", TableID + "_tableFixClone");
+            $("#" + TableID + "_tableFix").append(tableFixClone);
+            var tableHeadClone = oldtable.clone(true);
+            tableHeadClone.attr("id", TableID + "_tableHeadClone");
+            $("#" + TableID + "_tableHead").append(tableHeadClone);
+            var tableColumnClone = oldtable.clone(true);
+            tableColumnClone.attr("id", TableID + "_tableColumnClone");
+            $("#" + TableID + "_tableColumn").append(tableColumnClone);
+            $("#" + TableID + "_tableData").append(oldtable);
+            $("#" + TableID + "_tableLayout table").each(function () {
+                $(this).css("margin", "0");
+            });
+            var HeadHeight = $("#" + TableID + "_tableHead thead").height();
+            HeadHeight += 2;
+            $("#" + TableID + "_tableHead").css("height", HeadHeight);
+            $("#" + TableID + "_tableFix").css("height", HeadHeight);
+            var ColumnsWidth = 0;
+            var ColumnsNumber = 0;
+            $("#" + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
+                ColumnsWidth += $(this).outerWidth(true);
+                ColumnsNumber++;
+            });
+            ColumnsWidth += 2;
+            if ($.browser.msie) {
+                switch ($.browser.version) {
+                    case "7.0":
+                        if (ColumnsNumber >= 3) ColumnsWidth--;
+                        break;
+                    case "8.0":
+                        if (ColumnsNumber >= 2) ColumnsWidth--;
+                        break;
+                }
+            }
+            $("#" + TableID + "_tableColumn").css("width", ColumnsWidth);
+            $("#" + TableID + "_tableFix").css("width", ColumnsWidth);
+            $("#" + TableID + "_tableData").scroll(function () {
+                $("#" + TableID + "_tableHead").scrollLeft($("#" + TableID + "_tableData").scrollLeft());
+                $("#" + TableID + "_tableColumn").scrollTop($("#" + TableID + "_tableData").scrollTop());
+            });
+            $("#" + TableID + "_tableFix").css({ "overflow": "hidden", "position": "relative", "z-index": "50" });
+            $("#" + TableID + "_tableHead").css({ "overflow": "hidden", "width": width, "position": "relative", "z-index": "45" });
+            $("#" + TableID + "_tableColumn").css({ "overflow": "hidden", "height": height, "position": "relative", "z-index": "40" });
+            $("#" + TableID + "_tableData").css({ "overflow": "scroll", "width": width, "height": height, "position": "relative", "z-index": "35" });
+            if ($("#" + TableID + "_tableHead").width() > $("#" + TableID + "_tableFix table").width()) {
+                $("#" + TableID + "_tableHead").css("width", $("#" + TableID + "_tableFix table").width());
+                $("#" + TableID + "_tableData").css("width", $("#" + TableID + "_tableFix table").width());
+            }
+            if ($("#" + TableID + "_tableColumn").height() > $("#" + TableID + "_tableColumn table").height()) {
+                $("#" + TableID + "_tableColumn").css("height", $("#" + TableID + "_tableColumn table").height());
+                $("#" + TableID + "_tableData").css("height", $("#" + TableID + "_tableColumn table").height());
+            }
+            $("#" + TableID + "_tableFix").offset($("#" + TableID + "_tableLayout").offset());
+            $("#" + TableID + "_tableHead").offset($("#" + TableID + "_tableLayout").offset());
+            $("#" + TableID + "_tableColumn").offset($("#" + TableID + "_tableLayout").offset());
+            $("#" + TableID + "_tableData").offset($("#" + TableID + "_tableLayout").offset());
+        }
+
+
+        //页面初始化 加载 JS函数
+        $(document).ready(cloneTableHeader_Width);
+
+        //调整 浏览器 表格的显示宽度  以及 调用  锁定 表头和列  的JS函数。
+        function cloneTableHeader_Width() {
+            //document.body.clientWidth获得客户区域(浏览器窗口,不包括菜单栏和状态栏,就是内容窗口)的宽度 - 35像素的滚动条宽度。
+            var myTable_Width = (document.body.clientWidth - 35);
+
+            //alert(myTable_Width);//测试屏幕宽度
+            if ((document.body.clientWidth - 35) < 855) {
+                myTable_Width = 855; //宽度
+            }
+            //调用 锁定表头和 列 的JS函数
+            $(document).ready(function () {
+                FixTable("table_report", 1, screen.width, screen.height);
+            });
+        }
+
+    </script>
 </head>
 <body>
-    <header id="header" class="mui-bar mui-bar-nav">
-        <h1 class="mui-title">简报</h1>
-        <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">查询</button>
-    </header>
-    <div class="mui-content">
-        
-       
-    </div>
-
+    <table nowrap id="table_report" class="table table-bordered table-condensed" style="-moz-min-width: 480px; -ms-min-width: 480px; -o-min-width: 480px; -webkit-min-width: 480px; min-width: 480px;">
+        <thead>
+            <tr  class="active">
+                <!--             <th style="width: 100px">仓库</th>-->
+                <th>仓库</th>
+                <th>存货</th>
+                <th style="width: 15%">规格</th>
+                <th style="width: 10%">单位</th>
+                <th style="width: 15%">数量</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--            <tr><td>仓库1</td><td>存货1</td><td>规格1</td><td>库存1</td></tr>-->
+            <tr nowrap class="info"><td>lcx成本库</td><td>弹脆香肠40g</td><td>40g*10*10</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>lcx成本库</td><td>上选鸡腿王特级鸡肉肠30g</td><td>30g*10*10</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>lcx成本库</td><td>双汇萌宝(DHA鳕鱼肠)15g*20支</td><td>15*20*8</td><td>桶</td><td></td></tr>
+            <tr class="success"><td>lcx成本库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>lcx成本库</td><td>业务提成2+2</td><td>1*1</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>巴西3225眼肉</td><td>4444</td><td>斤</td><td>20</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td>0</td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>大胸</td><td>1*6</td><td>袋</td><td>30</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>稻香村710g稻香福礼干果礼盒</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>坚果</td><td>1*10</td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>橘子</td><td>1*30</td><td>袋</td><td>44</td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>可乐</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td>0</td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>0</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>苹果</td><td>1*10</td><td>袋</td><td>33</td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>巧克力</td><td>1*12</td><td>箱</td><td>0</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>五粮液</td><td></td><td>箱</td><td>0</td></tr>
+            <tr class="success"><td>PDA盘点库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>22</td></tr>
+            <tr class="active"><td>PDA盘点库</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td>32</td></tr>
+            <tr class="success"><td>北京朝阳分库</td><td>1号土猪肉</td><td>1*20</td><td>袋</td><td>10000</td></tr>
+            <tr class="active"><td>北京朝阳分库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td>-10</td></tr>
+            <tr class="success"><td>北京朝阳分库</td><td>橘子</td><td>1*30</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>北京朝阳分库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td>-10</td></tr>
+            <tr class="success"><td>北京朝阳分库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>-5</td></tr>
+            <tr class="active"><td>北京朝阳分库</td><td>苹果</td><td>1*10</td><td>袋</td><td>10</td></tr>
+            <tr class="success"><td>北京朝阳分库</td><td>巧克力</td><td>1*12</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>北京朝阳分库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>20</td></tr>
+            <tr class="success"><td>北京库</td><td>1号土猪肉</td><td>1*20</td><td>袋</td><td>1200</td></tr>
+            <tr class="active"><td>北京库</td><td>test2</td><td></td><td></td><td>100</td></tr>
+            <tr class="success"><td>北京库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td>121</td></tr>
+            <tr class="active"><td>北京库</td><td>饼干</td><td></td><td>斤</td><td></td></tr>
+            <tr class="success"><td>北京库</td><td>稻香村710g稻香福礼干果礼盒</td><td></td><td>袋</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>番茄酱1</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="success"><td>北京库</td><td>番茄酱2</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>番茄酱3</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="success"><td>北京库</td><td>番茄酱4</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>番茄酱5</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="success"><td>北京库</td><td>番茄酱6</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>蜂蜜280g蜂蜜280g</td><td></td><td>袋</td><td>30</td></tr>
+            <tr class="success"><td>北京库</td><td>广药白云山110g亚麻籽麦麸饼干</td><td></td><td>袋</td><td>500</td></tr>
+            <tr class="active"><td>北京库</td><td>坚果</td><td>1*10</td><td>袋</td><td>116</td></tr>
+            <tr class="success"><td>北京库</td><td>菊花茶</td><td></td><td></td><td>1205</td></tr>
+            <tr class="active"><td>北京库</td><td>橘子</td><td>1*30</td><td>袋</td><td>2276</td></tr>
+            <tr class="success"><td>北京库</td><td>卷纸</td><td></td><td>袋</td><td>10</td></tr>
+            <tr class="active"><td>北京库</td><td>可乐</td><td></td><td>袋</td><td>1000000</td></tr>
+            <tr class="success"><td>北京库</td><td>辣油碗托</td><td>1*10</td><td>斤</td><td>149</td></tr>
+            <tr class="active"><td>北京库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td>110</td></tr>
+            <tr class="success"><td>北京库</td><td>麻酱碗托</td><td>1*10</td><td>个</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>58</td></tr>
+            <tr class="success"><td>北京库</td><td>农夫山泉</td><td></td><td>袋</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>苹果</td><td>1*10</td><td>袋</td><td>2239.5</td></tr>
+            <tr class="success"><td>北京库</td><td>葡萄</td><td>1*10</td><td>箱</td><td>95</td></tr>
+            <tr class="active"><td>北京库</td><td>巧克力</td><td>1*12</td><td>箱</td><td>100</td></tr>
+            <tr class="success"><td>北京库</td><td>桃花姬210g阿胶糕-210g</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>北京库</td><td>桃花姬40g阿胶糕-40g</td><td>1*6</td><td>箱</td><td>634</td></tr>
+            <tr class="success"><td>北京库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>1978</td></tr>
+            <tr class="active"><td>北京库</td><td>优滋果235g糖水黄桃果杯-235g</td><td></td><td>箱</td><td>100</td></tr>
+            <tr class="success"><td>北京库</td><td>御食园果脯</td><td></td><td>袋</td><td>100</td></tr>
+            <tr class="active"><td>北京库</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td>131.5</td></tr>
+            <tr class="success"><td>北京总库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td>6</td></tr>
+            <tr class="active"><td>北京总库</td><td>苹果</td><td>1*10</td><td>袋</td><td>990</td></tr>
+            <tr class="success"><td>北京总库</td><td>葡萄</td><td>1*10</td><td>箱</td><td>8888778</td></tr>
+            <tr class="active"><td>北京总库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>测试负库存</td><td>大胸</td><td>1*6</td><td>袋</td><td>10</td></tr>
+            <tr class="active"><td>测试负库存</td><td>橘子</td><td>1*30</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>测试负库存</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>-8</td></tr>
+            <tr class="active"><td>测试负库存</td><td>农夫山泉</td><td></td><td>袋</td><td>12</td></tr>
+            <tr class="success"><td>测试负库存</td><td>五粮液</td><td></td><td>箱</td><td>1</td></tr>
+            <tr class="active"><td>测试负库存</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>测试库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>9</td></tr>
+            <tr class="active"><td>测试库1</td><td>橘子</td><td>1*30</td><td>袋</td><td>80</td></tr>
+            <tr class="success"><td>测试库1</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>15</td></tr>
+            <tr class="active"><td>测试库1</td><td>业务提成2+2</td><td>1*1</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>测试移动加权</td><td>果果多</td><td></td><td>瓶</td><td>9990</td></tr>
+            <tr class="active"><td>成本测试仓库</td><td>华都鸡翅</td><td></td><td>袋</td><td>985</td></tr>
+            <tr class="success"><td>成本测试仓库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td>135</td></tr>
+            <tr class="active"><td>成本测试库1</td><td>棒棒娃</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>成本测试库1</td><td>打印设备</td><td>32</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>成本测试库1</td><td>苹果</td><td>1*10</td><td>袋</td><td>10</td></tr>
+            <tr class="success"><td>成本测试库1</td><td>食享鱼肉王特级鱼肉肠50g</td><td>50g*5*20</td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>成本测试库1</td><td>双汇萌宝(DHA鳕鱼肠)15g*20支</td><td>15*20*8</td><td>桶</td><td>5</td></tr>
+            <tr class="success"><td>成本测试库1</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>5</td></tr>
+            <tr class="active"><td>成品库</td><td>1号土猪肉</td><td>1*20</td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>BGS花生果酱</td><td>3kg*6桶/箱</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>test2</td><td></td><td></td><td></td></tr>
+            <tr class="success"><td>成品库</td><td>巴西3225眼肉</td><td>4444</td><td>斤</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>棒棒娃</td><td></td><td>袋</td><td>940</td></tr>
+            <tr class="success"><td>成品库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td>3145.708333</td></tr>
+            <tr class="active"><td>成品库</td><td>兵团红新疆贡枣新疆贡枣</td><td></td><td>箱</td><td>1</td></tr>
+            <tr class="success"><td>成品库</td><td>饼干</td><td></td><td>斤</td><td>4286</td></tr>
+            <tr class="active"><td>成品库</td><td>超市香辣鸡肉肠(30g)</td><td>30g*9*10</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>成品库</td><td>唇动180g白色经典蛋糕-180g</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>成品库</td><td>打印设备</td><td>32</td><td>袋</td><td>20</td></tr>
+            <tr class="success"><td>成品库</td><td>大胸</td><td>1*6</td><td>袋</td><td>98</td></tr>
+            <tr class="active"><td>成品库</td><td>丹夫100g椰蓉伯力爵-100g</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>丹夫103g白巧克力伯力爵-103g</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>成品库</td><td>丹夫168g提拉米苏味蛋糕-168g</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>丹夫200g椰蓉伯力爵-200g</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>稻香村710g稻香福礼干果礼盒</td><td></td><td>袋</td><td>599308</td></tr>
+            <tr class="success"><td>成品库</td><td>番茄酱1</td><td>1*12</td><td>箱</td><td>8.333334</td></tr>
+            <tr class="active"><td>成品库</td><td>番茄酱2</td><td>1*12</td><td>箱</td><td>6</td></tr>
+            <tr class="success"><td>成品库</td><td>番茄酱3</td><td>1*12</td><td>箱</td><td>0</td></tr>
+            <tr class="active"><td>成品库</td><td>番茄酱4</td><td>1*12</td><td>箱</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>番茄酱5</td><td>1*12</td><td>箱</td><td>0</td></tr>
+            <tr class="active"><td>成品库</td><td>番茄酱6</td><td>1*12</td><td>箱</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>蜂蜜280g蜂蜜280g</td><td></td><td>袋</td><td>1259</td></tr>
+            <tr class="active"><td>成品库</td><td>弗吉尼亚风味香肠50g*5</td><td>50g*5*10</td><td>盒</td><td></td></tr>
+            <tr class="success"><td>成品库</td><td>广药白云山110g亚麻籽麦麸饼干</td><td></td><td>袋</td><td>1</td></tr>
+            <tr class="active"><td>成品库</td><td>果果多</td><td></td><td>瓶</td><td>50</td></tr>
+            <tr class="success"><td>成品库</td><td>果太太糖水草莓罐头</td><td>820g*24罐/箱</td><td></td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>红茶</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>成品库</td><td>嘉能168g芝麻味硬华夫-168g</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>坚果</td><td>1*10</td><td>袋</td><td>99864</td></tr>
+            <tr class="success"><td>成品库</td><td>橘子</td><td>1*30</td><td>袋</td><td>5268</td></tr>
+            <tr class="active"><td>成品库</td><td>卷纸</td><td></td><td>袋</td><td>140</td></tr>
+            <tr class="success"><td>成品库</td><td>可乐</td><td></td><td>袋</td><td>482058</td></tr>
+            <tr class="active"><td>成品库</td><td>辣油碗托</td><td>1*10</td><td>斤</td><td>10</td></tr>
+            <tr class="success"><td>成品库</td><td>利拉比利时400g风味黑糖饼干-</td><td>去</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td>2141390.65</td></tr>
+            <tr class="success"><td>成品库</td><td>麻酱碗托</td><td>1*10</td><td>个</td><td>10</td></tr>
+            <tr class="active"><td>成品库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>88.05</td></tr>
+            <tr class="success"><td>成品库</td><td>农夫山泉</td><td></td><td>袋</td><td>1081</td></tr>
+            <tr class="active"><td>成品库</td><td>苹果</td><td>1*10</td><td>袋</td><td>1412283.944134</td></tr>
+            <tr class="success"><td>成品库</td><td>葡萄</td><td>1*10</td><td>箱</td><td>0</td></tr>
+            <tr class="active"><td>成品库</td><td>巧克力</td><td>1*12</td><td>箱</td><td>49</td></tr>
+            <tr class="success"><td>成品库</td><td>山水农夫</td><td>1*24</td><td>瓶</td><td>463</td></tr>
+            <tr class="active"><td>成品库</td><td>双汇40g*10新王中王</td><td>40g*10*12</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>成品库</td><td>水杯</td><td></td><td>个</td><td>220</td></tr>
+            <tr class="active"><td>成品库</td><td>桃花姬210g阿胶糕-210g</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>桃花姬40g阿胶糕-40g</td><td>1*6</td><td>箱</td><td>360</td></tr>
+            <tr class="active"><td>成品库</td><td>五粮液</td><td></td><td>箱</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>香蕉</td><td></td><td>箱</td><td>25</td></tr>
+            <tr class="active"><td>成品库</td><td>小零食</td><td></td><td>袋</td><td>2155</td></tr>
+            <tr class="success"><td>成品库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>7270351.500006</td></tr>
+            <tr class="active"><td>成品库</td><td>洋槐蜂蜜280G洋槐蜂蜜</td><td></td><td>袋</td><td>1111</td></tr>
+            <tr class="success"><td>成品库</td><td>伊町乌冬面400g001</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>怡浓270g香芋味铜锣烧-270g</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>成品库</td><td>优滋果235g糖水黄桃果杯-235g</td><td></td><td>箱</td><td>1.111111</td></tr>
+            <tr class="active"><td>成品库</td><td>御食园果脯</td><td></td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>成品库</td><td>芝士鱼肉肠22g</td><td>22g*5*15</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>成品库</td><td>周氏野桂花蜂蜜700g周氏野桂花蜂蜜</td><td></td><td>袋</td><td>1213</td></tr>
+            <tr class="success"><td>成品库</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td>110</td></tr>
+            <tr class="active"><td>番茄酱库</td><td>番茄酱1</td><td>1*12</td><td>箱</td><td>356</td></tr>
+            <tr class="success"><td>番茄酱库</td><td>番茄酱2</td><td>1*12</td><td>箱</td><td>445</td></tr>
+            <tr class="active"><td>番茄酱库</td><td>番茄酱3</td><td>1*12</td><td>箱</td><td>2455</td></tr>
+            <tr class="success"><td>番茄酱库</td><td>番茄酱4</td><td>1*12</td><td>箱</td><td>123</td></tr>
+            <tr class="active"><td>番茄酱库</td><td>番茄酱5</td><td>1*12</td><td>箱</td><td>123</td></tr>
+            <tr class="success"><td>番茄酱库</td><td>番茄酱6</td><td>1*12</td><td>箱</td><td>123</td></tr>
+            <tr class="active"><td>番茄酱库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>货位测试</td><td>弹脆香肠40g</td><td>40g*10*10</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>稻香村710g稻香福礼干果礼盒</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>货位测试</td><td>弗吉尼亚风味香肠50g*5</td><td>50g*5*10</td><td>盒</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>红茶</td><td></td><td>袋</td><td>10</td></tr>
+            <tr class="active"><td>货位测试</td><td>坚果</td><td>1*10</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>橘子</td><td>1*30</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>货位测试</td><td>可乐</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>货位测试</td><td>牛肉干</td><td>1*20</td><td>箱</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>苹果</td><td>1*10</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>货位测试</td><td>上选鸡腿王特级鸡肉肠30g</td><td>30g*10*10</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>货位测试</td><td>水杯</td><td></td><td>个</td><td>20</td></tr>
+            <tr class="active"><td>货位测试</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>12</td></tr>
+            <tr class="success"><td>货位测试</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td>125</td></tr>
+            <tr class="active"><td>加权平均库</td><td>辣油碗托</td><td>1*10</td><td>斤</td><td>30</td></tr>
+            <tr class="success"><td>加权平均库</td><td>麻酱碗托</td><td>1*10</td><td>个</td><td>229</td></tr>
+            <tr class="active"><td>加权平均库</td><td>双汇萌宝(DHA鳕鱼肠)15g*20支</td><td>15*20*8</td><td>桶</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>1号土猪肉</td><td>1*20</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>test2</td><td></td><td></td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>稻香村710g稻香福礼干果礼盒</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>广药白云山110g亚麻籽麦麸饼干</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>坚果</td><td>1*10</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>橘子</td><td>1*30</td><td>袋</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>可乐</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>农夫山泉</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>苹果</td><td>1*10</td><td>袋</td><td>1776</td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>葡萄</td><td>1*10</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>巧克力</td><td>1*12</td><td>箱</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>桃花姬210g阿胶糕-210g</td><td></td><td>袋</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>桃花姬40g阿胶糕-40g</td><td>1*6</td><td>箱</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>五粮液</td><td></td><td>箱</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>优滋果235g糖水黄桃果杯-235g</td><td></td><td>箱</td><td></td></tr>
+            <tr class="active"><td>青铜器软件库</td><td>御食园果脯</td><td></td><td>袋</td><td></td></tr>
+            <tr class="success"><td>青铜器软件库</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td></td></tr>
+            <tr class="active"><td>轻软在线库</td><td>嘉能168g芝麻味硬华夫-168g</td><td></td><td>袋</td><td>1</td></tr>
+            <tr class="success"><td>轻软在线库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>0</td></tr>
+            <tr class="active"><td>轻软在线库</td><td>怡浓270g香芋味铜锣烧-270g</td><td></td><td>袋</td><td>1</td></tr>
+            <tr class="success"><td>轻软在线库</td><td>友臣346g肉松饼-346g</td><td></td><td>袋</td><td>2</td></tr>
+            <tr class="active"><td>软件库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>212</td></tr>
+            <tr class="success"><td>上海库</td><td>火龙果</td><td>hghg</td><td>箱</td><td>2</td></tr>
+            <tr class="active"><td>上海库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>2</td></tr>
+            <tr class="success"><td>上海库</td><td>葡萄</td><td>1*10</td><td>箱</td><td>2</td></tr>
+            <tr class="active"><td>上海库</td><td>巧克力</td><td>1*12</td><td>箱</td><td>2</td></tr>
+            <tr class="success"><td>上海库</td><td>桃花姬210g阿胶糕-210g</td><td></td><td>袋</td><td>-8</td></tr>
+            <tr class="active"><td>上海库</td><td>桃花姬40g阿胶糕-40g</td><td>1*6</td><td>箱</td><td></td></tr>
+            <tr class="success"><td>上海库</td><td>五粮液</td><td></td><td>箱</td><td>2</td></tr>
+            <tr class="active"><td>上海库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>8</td></tr>
+            <tr class="success"><td>上海库</td><td>优滋果235g糖水黄桃果杯-235g</td><td></td><td>箱</td><td></td></tr>
+            <tr class="active"><td>手机库存</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>30</td></tr>
+            <tr class="success"><td>提成仓库</td><td>手机</td><td>1*12</td><td>件</td><td>1</td></tr>
+            <tr class="active"><td>提成仓库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>41</td></tr>
+            <tr class="success"><td>提成仓库</td><td>业务提成1</td><td></td><td>袋</td><td>405</td></tr>
+            <tr class="active"><td>提成仓库</td><td>业务提成2+2</td><td>1*1</td><td>袋</td><td>466</td></tr>
+            <tr class="success"><td>天津库</td><td>番茄酱1</td><td>1*12</td><td>箱</td><td>6</td></tr>
+            <tr class="active"><td>天津库</td><td>番茄酱2</td><td>1*12</td><td>箱</td><td>88</td></tr>
+            <tr class="success"><td>天津库</td><td>番茄酱3</td><td>1*12</td><td>箱</td><td>90</td></tr>
+            <tr class="active"><td>天津库</td><td>橘子</td><td>1*30</td><td>袋</td><td>0</td></tr>
+            <tr class="success"><td>天津库</td><td>苹果</td><td>1*10</td><td>袋</td><td>110</td></tr>
+            <tr class="active"><td>天津库</td><td>桃花姬210g阿胶糕-210g</td><td></td><td>袋</td><td>482</td></tr>
+            <tr class="success"><td>天津库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>-50</td></tr>
+            <tr class="active"><td>天津库</td><td>优滋果235g糖水黄桃果杯-235g</td><td></td><td>箱</td><td>-2.222222</td></tr>
+            <tr class="success"><td>天津库</td><td>御食园果脯</td><td></td><td>袋</td><td>274</td></tr>
+            <tr class="active"><td>天津库</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td></td></tr>
+            <tr class="success"><td>天山红库</td><td>橘子</td><td>1*30</td><td>袋</td><td>9869</td></tr>
+            <tr class="active"><td>天山红库</td><td>苹果</td><td>1*10</td><td>袋</td><td>9789</td></tr>
+            <tr class="success"><td>天山红库</td><td>山水农夫</td><td>1*24</td><td>瓶</td><td>100</td></tr>
+            <tr class="active"><td>天山红库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>9793</td></tr>
+            <tr class="success"><td>碗托库</td><td>辣油碗托</td><td>1*10</td><td>斤</td><td>300</td></tr>
+            <tr class="active"><td>碗托库</td><td>麻酱碗托</td><td>1*10</td><td>个</td><td>200</td></tr>
+            <tr class="success"><td>小a</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>6</td></tr>
+            <tr class="active"><td>小b</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>29</td></tr>
+            <tr class="success"><td>移动加权计算</td><td>辣油碗托</td><td>1*10</td><td>斤</td><td>190</td></tr>
+            <tr class="active"><td>移动加权计算</td><td>麻酱碗托</td><td>1*10</td><td>个</td><td>489</td></tr>
+            <tr class="success"><td>移动加权计算</td><td>怡浓270g香芋味铜锣烧-270g</td><td></td><td>袋</td><td>10</td></tr>
+            <tr class="active"><td>中国大库</td><td>1号土猪肉</td><td>1*20</td><td>袋</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>test2</td><td></td><td></td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>安琪鲜酵母</td><td>500g*40块/箱</td><td></td><td>22222</td></tr>
+            <tr class="success"><td>中国大库</td><td>棒棒娃</td><td></td><td>袋</td><td>66666</td></tr>
+            <tr class="active"><td>中国大库</td><td>北京牛栏山二锅头</td><td>1*12</td><td>箱</td><td>12222</td></tr>
+            <tr class="success"><td>中国大库</td><td>兵团红新疆贡枣新疆贡枣</td><td></td><td>箱</td><td>22333</td></tr>
+            <tr class="active"><td>中国大库</td><td>兵团红珍珠枣兵团红珍珠枣</td><td></td><td>袋</td><td>22333</td></tr>
+            <tr class="success"><td>中国大库</td><td>饼干</td><td></td><td>斤</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>唇动180g白色经典蛋糕-180g</td><td></td><td>袋</td><td>11110</td></tr>
+            <tr class="success"><td>中国大库</td><td>唇动白色经典牛奶味涂饰蛋糕180g涂饰蛋糕</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>丹夫100g椰蓉伯力爵-100g</td><td></td><td>袋</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>丹夫103g白巧克力伯力爵-103g</td><td></td><td>袋</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>丹夫168g提拉米苏味蛋糕-168g</td><td></td><td>袋</td><td>11087</td></tr>
+            <tr class="success"><td>中国大库</td><td>丹夫200g椰蓉伯力爵-200g</td><td></td><td>袋</td><td>11121</td></tr>
+            <tr class="active"><td>中国大库</td><td>稻香村710g稻香福礼干果礼盒</td><td></td><td>袋</td><td>22221</td></tr>
+            <tr class="success"><td>中国大库</td><td>番茄酱1</td><td>1*12</td><td>箱</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>番茄酱2</td><td>1*12</td><td>箱</td><td>37</td></tr>
+            <tr class="success"><td>中国大库</td><td>番茄酱3</td><td>1*12</td><td>箱</td><td>1147</td></tr>
+            <tr class="active"><td>中国大库</td><td>番茄酱4</td><td>1*12</td><td>箱</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>番茄酱5</td><td>1*12</td><td>箱</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>番茄酱6</td><td>1*12</td><td>箱</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>蜂蜜280g蜂蜜280g</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>广药白云山110g亚麻籽麦麸饼干</td><td></td><td>袋</td><td>12343</td></tr>
+            <tr class="success"><td>中国大库</td><td>红茶</td><td></td><td>袋</td><td>44444</td></tr>
+            <tr class="active"><td>中国大库</td><td>华都鸡翅</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="success"><td>中国大库</td><td>火龙果</td><td>hghg</td><td>箱</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>嘉能168g原味硬华夫-168g</td><td></td><td>袋</td><td>11232</td></tr>
+            <tr class="success"><td>中国大库</td><td>嘉能168g芝麻味硬华夫-168g</td><td></td><td>袋</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>坚果</td><td>1*10</td><td>袋</td><td>12230</td></tr>
+            <tr class="success"><td>中国大库</td><td>菊花茶</td><td></td><td></td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>橘子</td><td>1*30</td><td>袋</td><td>10031.00001</td></tr>
+            <tr class="success"><td>中国大库</td><td>卷纸</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>可乐</td><td></td><td>袋</td><td>2222</td></tr>
+            <tr class="success"><td>中国大库</td><td>辣油碗托</td><td>1*10</td><td>斤</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>利拉比利时400g风味黑糖饼干-</td><td>去</td><td>袋</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>六合鸡翅</td><td>1*20</td><td>箱</td><td>12342</td></tr>
+            <tr class="active"><td>中国大库</td><td>麻酱碗托</td><td>1*10</td><td>个</td><td>22222</td></tr>
+            <tr class="success"><td>中国大库</td><td>美吉果红提干65g001</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>牛肉干</td><td>1*20</td><td>箱</td><td>13424</td></tr>
+            <tr class="success"><td>中国大库</td><td>农夫山泉</td><td></td><td>袋</td><td>11444</td></tr>
+            <tr class="active"><td>中国大库</td><td>苹果</td><td>1*10</td><td>袋</td><td>13555</td></tr>
+            <tr class="success"><td>中国大库</td><td>葡萄</td><td>1*10</td><td>箱</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>巧克力</td><td>1*12</td><td>箱</td><td>12222</td></tr>
+            <tr class="success"><td>中国大库</td><td>山水农夫</td><td>1*24</td><td>瓶</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>水杯</td><td></td><td>个</td><td>44444</td></tr>
+            <tr class="success"><td>中国大库</td><td>桃花姬210g阿胶糕-210g</td><td></td><td>袋</td><td>15322</td></tr>
+            <tr class="active"><td>中国大库</td><td>桃花姬40g阿胶糕-40g</td><td>1*6</td><td>箱</td><td>11341</td></tr>
+            <tr class="success"><td>中国大库</td><td>五粮液</td><td></td><td>箱</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>香蕉</td><td></td><td>箱</td><td>22333</td></tr>
+            <tr class="success"><td>中国大库</td><td>香蕉1</td><td></td><td>袋</td><td>22220</td></tr>
+            <tr class="active"><td>中国大库</td><td>小零食</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="success"><td>中国大库</td><td>新疆兵团红贡枣 (四星 )贡枣</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>新西兰大黄油（冷冻保存）</td><td>25kg/箱</td><td></td><td>22222</td></tr>
+            <tr class="success"><td>中国大库</td><td>徐福记饼干</td><td>1*20</td><td>袋</td><td>60678</td></tr>
+            <tr class="active"><td>中国大库</td><td>旭</td><td>去</td><td>箱</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>洋槐蜂蜜280G洋槐蜂蜜</td><td></td><td>袋</td><td>22219</td></tr>
+            <tr class="active"><td>中国大库</td><td>怡浓270g香芋味铜锣烧-270g</td><td></td><td>袋</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>优滋果235g糖水黄桃果杯-235g</td><td></td><td>箱</td><td>14252</td></tr>
+            <tr class="active"><td>中国大库</td><td>友臣346g肉松饼-346g</td><td></td><td>袋</td><td>11111</td></tr>
+            <tr class="success"><td>中国大库</td><td>御食园果脯</td><td></td><td>袋</td><td>11111</td></tr>
+            <tr class="active"><td>中国大库</td><td>周氏野桂花蜂蜜700g周氏野桂花蜂蜜</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="success"><td>中国大库</td><td>周氏枣花蜂蜜周氏枣花蜂蜜</td><td></td><td>袋</td><td>22222</td></tr>
+            <tr class="active"><td>中国大库</td><td>猪肉1号</td><td>1*12</td><td>箱</td><td>11343</td></tr>
+        </tbody>
+    </table>
 </body>
 </html>

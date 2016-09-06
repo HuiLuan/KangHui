@@ -10,56 +10,164 @@
     <meta name="viewport" content="width=device-width" />
     <title></title>
     @Styles.Render("~/Content/css")
-    <link href="~/Content/mui.min.css" rel="stylesheet"/>
+    <link href="~/Content/mui.min.css" rel="stylesheet" />
     <link href="~/Content/app.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@*    <link href="~/Content/bootstrat-datetimepicker.css" rel="stylesheet"/>*@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-migrate")
     <script src="~/Scripts/mui.min.js"></script>
-
-
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.zh-CN.js"></script>
     <style>
         html,
-        body {
+        body,
+        .mui-content {
+            height: 0px;
+            margin: 0px;
             background-color: #efeff4;
         }
 
-        .mui-bar .mui-pull-left .mui-icon {
-            padding-right: 5px;
-            font-size: 28px;
+        h5.mui-content-padded {
+            margin-left: 3px;
+            margin-top: 20px !important;
         }
 
-        .mui-bar .mui-btn {
-            font-weight: normal;
-            font-size: 17px;
+            h5.mui-content-padded:first-child {
+                margin-top: 12px !important;
+            }
+
+        .mui-btn {
+            font-size: 16px;
+            padding: 8px;
+            margin: 3px;
         }
 
-        .mui-bar .mui-btn-link {
-            top: 1px;
+        .ui-alert {
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 16px;
+        }
+
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
         }
     </style>
 
 </head>
-<body style="margin: 0; padding: 0">
+<body>
 
-<header id="header" class="mui-bar mui-bar-nav">
-    <h1 class="mui-title">简报</h1>
-    <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">查询</button>
-</header>
-       
-    <div class="mui-content">
+    <header id="header" class="mui-bar mui-bar-nav">
+
+        <h1 class="mui-title">简报</h1>
+        <a id="menu" class="mui-action-menu mui-icon mui-icon-bars mui-pull-right" href="#topPopover"></a>
+        @*    <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" href="#topPopover">查询</button>*@
+    </header>
+
+    <!--右上角弹出菜单-->
+    <div id="topPopover" class="mui-popover" style="height: 140px !important">
+        <div class="mui-popover-arrow"></div>
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+
+                <form class="mui-input-group">
+                    <div class="mui-input-row">
+                        <input id="datetimepickerstart" type="text" value="" class="mui-input-clear" data-date-format="yyyy-mm-dd" readonly placeholder="选择开始时间">
+                    </div>
+                    <div class="mui-input-row">
+                        @*                        <div class="input-group" data-date="" data-date-format="dd MM yyyy" >*@
+                        @*                            <input class="form-control" size="16" type="text" value="" readonly>*@
+                        <input id="datetimepickerend" type="text" value="" class="mui-input-clear" data-date-format="yyyy-mm-dd" readonly placeholder="选择结束时间">
+                        @*                            <span onclick='$("#datetimepicker").val("");' class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>*@
+
+                        @*                        </div>*@
+
+
+
+                    </div>
+
+                    <div class="mui-button-row">
+                        <button type="button" class="mui-btn mui-btn-primary" onclick="refreshdata()">确认</button>&nbsp;&nbsp;
+                        <button type="button" class="mui-btn mui-btn-danger" onclick="hidepop()">取消</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mui-content" style="padding-left: 0 !important">
 
         <form action="JianBaoIndex" data-ajax="true" data-ajax-mode="replace" data-ajax-success="" data-ajax-update="#listContainer" id="searchForm"></form>
 
-        <div  id="listContainer">
-            @Html.Partial("JianBaoItems", (object) Model)
+        <div id="listContainer">
+            @Html.Partial("JianBaoItems", (object)Model)
         </div>
 
-        </div>
+    </div>
 
+    <script>
+        mui.init({
+            swipeBack: true //启用右滑关闭功能
+        });
+        mui('.mui-scroll-wrapper').scroll();
+        mui('body').on('shown', '.mui-popover', function (e) {
+            //console.log('shown', e.detail.id);//detail为当前popover元素
+        });
+        mui('body').on('hidden', '.mui-popover', function (e) {
+            //console.log('hidden', e.detail.id);//detail为当前popover元素
+        });
 
+        function hidepop() {
+            mui('#topPopover').popover('hide');
+        }
 
+        $('#datetimepickerstart').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            keyboardNavigation:1
+        });
+        $('#datetimepickerend').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+              keyboardNavigation:1
+        });
 
+        function refreshdata() {
+            if ($("#datetimepickerstart").val() === "" && $("#datetimepickerend").val()==="") {
+                hidepop();
+                return;
+            }
+            hidepop();
+            $.ajax({
+                url: '/Default/JianBaoIndex?start=' + $("#datetimepickerstart").val() + '&end=' + $("#datetimepickerend").val(),
+                data: {},
+                cache: false,
+            }).done(function (result) {
+                $("#listContainer").html(result);
+                cleardate();
+            });
+        }
 
+        function cleardate() {
+            $("#datetimepickerstart").val("");
+            $("datetimepickerend").val("");
+        }
+
+    </script>
 </body>
 </html>
