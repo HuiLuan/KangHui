@@ -214,6 +214,7 @@
     <Content Include="Views\Default\YueBaoChanPin.cshtml" />
     <Content Include="Views\Default\YueBaoRiQi.cshtml" />
     <Content Include="Views\Default\Mui.cshtml" />
+    <Content Include="Views\Default\YueBaoIndex2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

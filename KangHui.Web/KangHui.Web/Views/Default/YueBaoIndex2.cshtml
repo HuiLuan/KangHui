@@ -1,0 +1,343 @@
+﻿@using KangHui.Web.Models
+@model  IEnumerable<YueBao>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title></title>
+    <link href="~/Content/mui.min.css" rel="stylesheet" />
+    <link href="~/Content/app.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .mui-card .mui-control-content {
+            padding: 10px;
+        }
+
+
+    </style>
+
+    <script src="~/Scripts/mui.min.js"></script>
+
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">月报</h1>
+</header>
+    <div class="mui-content">
+        <div style="padding: 10px 10px;">
+            <div id="segmentedControl" class="mui-segmented-control">
+                <a class="mui-control-item mui-active" href="#item1">
+                    日期
+                </a>
+                <a class="mui-control-item" href="#item2">
+                    客户
+                </a>
+                <a class="mui-control-item" href="#item3">
+                    业务员
+                </a>
+                  <a class="mui-control-item" href="#item4">
+                    产品
+                </a>
+            </div>
+        </div>
+        <div>
+            <div id="item1" class="mui-control-content mui-active">
+
+                <table class="table table-bordered table-condensed">
+                    <tr class="btn-info"><th>日期</th><th>销售量</th><th>销售额</th><th>同比</th><th>环比</th></tr>
+                    @{
+                        int index = 0;
+                        foreach (var group in Model.GroupBy(x => x.日期.ToString("yyyy-MM-dd")))
+                        {
+                            index++;
+                            if (index%2 == 0)
+                            {
+                                <tr class="success"><td>@group.Key </td><td>@group.Sum(x=>x.销售量)</td><td>@group.Sum(x => x.销售额)</td><td>
+
+                                    @{
+                                        var firstOrDefault = @group.FirstOrDefault();
+                                    }
+                                    @if (firstOrDefault != null)
+                                    {
+                                        @firstOrDefault.同比
+                                    }</td><td>
+
+                                    @{
+                                        var orDefault = @group.FirstOrDefault();
+                                    }
+                                    @if (orDefault != null)
+                                    {
+                                        @orDefault.环比
+                                    }</td></tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="active">
+                                                <td>@group.Key </td>
+                                                <td>@group.Sum(x => x.销售量)</td>
+                                                <td>@group.Sum(x => x.销售额)</td>
+                                                <td>
+                                                    @{
+                                                        var firstOrDefault = @group.FirstOrDefault();
+                                                    }
+                                                    @if (firstOrDefault != null)
+                                                    {
+                                                        @firstOrDefault.同比
+                                                    }
+                                                </td>
+                                                <td>
+
+                                                    @{
+                                                        var orDefault = @group.FirstOrDefault();
+                                                    }
+                                                    @if (orDefault != null)
+                                                    {
+                                                        @orDefault.环比
+                                                    }
+                                                </td>
+                                            </tr>
+                                                            }
+                                                        }
+                    }
+                </table>
+
+            </div>
+            <div id="item2" class="mui-control-content">
+                <table class="table table-bordered table-condensed">
+                    <tr class="btn-info"><th>客户</th><th>销售量</th><th>销售额</th><th>同比</th><th>环比</th></tr>
+                    @{
+                        int index2 = 0;
+                        foreach (var group in Model.GroupBy(x => x.客户))
+                        {
+                            index2++;
+                            if (index2 % 2 == 0)
+                            {
+                                <tr class="success">
+                                    <td>@group.Key </td>
+                                    <td>@group.Sum(x => x.销售量)</td>
+                                    <td>@group.Sum(x => x.销售额)</td>
+                                    <td>
+
+                                        @{
+                                            var firstOrDefault = @group.FirstOrDefault();
+                                        }
+                                        @if (firstOrDefault != null)
+                                        {
+                                            @firstOrDefault.同比
+                                        }
+                                    </td>
+                                    <td>
+
+                                        @{
+                                            var orDefault = @group.FirstOrDefault();
+                                        }
+                                        @if (orDefault != null)
+                                        {
+                                            @orDefault.环比
+                                        }
+                                    </td>
+                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr class="active">
+                                                    <td>@group.Key </td>
+                                                    <td>@group.Sum(x => x.销售量)</td>
+                                                    <td>@group.Sum(x => x.销售额)</td>
+                                                    <td>
+                                                        @{
+                                                            var firstOrDefault = @group.FirstOrDefault();
+                                                        }
+                                                        @if (firstOrDefault != null)
+                                                        {
+                                                            @firstOrDefault.同比
+                                                        }
+                                                    </td>
+                                                    <td>
+
+                                                        @{
+                                                            var orDefault = @group.FirstOrDefault();
+                                                        }
+                                                        @if (orDefault != null)
+                                                        {
+                                                            @orDefault.环比
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                                }
+                                                            }
+                    }
+                </table>
+            </div>
+            <div id="item3" class="mui-control-content">
+                <table class="table table-bordered table-condensed">
+                    <tr class="btn-info"><th>业务员</th><th>销售量</th><th>销售额</th><th>同比</th><th>环比</th></tr>
+                    @{
+                        int index3 = 0;
+                        foreach (var group in Model.GroupBy(x => x.业务员))
+                        {
+                            index3++;
+                            if (index3 % 2 == 0)
+                            {
+                                <tr class="success">
+                                    <td>@group.Key </td>
+                                    <td>@group.Sum(x => x.销售量)</td>
+                                    <td>@group.Sum(x => x.销售额)</td>
+                                    <td>
+
+                                        @{
+                                            var firstOrDefault = @group.FirstOrDefault();
+                                        }
+                                        @if (firstOrDefault != null)
+                                        {
+                                            @firstOrDefault.同比
+                                        }
+                                    </td>
+                                    <td>
+
+                                        @{
+                                            var orDefault = @group.FirstOrDefault();
+                                        }
+                                        @if (orDefault != null)
+                                        {
+                                            @orDefault.环比
+                                        }
+                                    </td>
+                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr class="active">
+                                                    <td>@group.Key </td>
+                                                    <td>@group.Sum(x => x.销售量)</td>
+                                                    <td>@group.Sum(x => x.销售额)</td>
+                                                    <td>
+                                                        @{
+                                                            var firstOrDefault = @group.FirstOrDefault();
+                                                        }
+                                                        @if (firstOrDefault != null)
+                                                        {
+                                                            @firstOrDefault.同比
+                                                        }
+                                                    </td>
+                                                    <td>
+
+                                                        @{
+                                                            var orDefault = @group.FirstOrDefault();
+                                                        }
+                                                        @if (orDefault != null)
+                                                        {
+                                                            @orDefault.环比
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                                }
+                                                            }
+                    }
+                </table>
+            </div>
+            <div id="item4" class="mui-control-content">
+                <table class="table table-bordered table-condensed">
+                    <tr class="btn-info"><th>产品</th><th>销售量</th><th>销售额</th><th>同比</th><th>环比</th></tr>
+                    @{
+                        int index4 = 0;
+                        foreach (var group in Model.GroupBy(x => x.产品))
+                        {
+                            index4++;
+                            if (index4 % 2 == 0)
+                            {
+                                <tr class="success">
+                                    <td>@group.Key </td>
+                                    <td>@group.Sum(x => x.销售量)</td>
+                                    <td>@group.Sum(x => x.销售额)</td>
+                                    <td>
+
+                                        @{
+                                            var firstOrDefault = @group.FirstOrDefault();
+                                        }
+                                        @if (firstOrDefault != null)
+                                        {
+                                            @firstOrDefault.同比
+                                        }
+                                    </td>
+                                    <td>
+
+                                        @{
+                                            var orDefault = @group.FirstOrDefault();
+                                        }
+                                        @if (orDefault != null)
+                                        {
+                                            @orDefault.环比
+                                        }
+                                    </td>
+                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr class="active">
+                                                    <td>@group.Key </td>
+                                                    <td>@group.Sum(x => x.销售量)</td>
+                                                    <td>@group.Sum(x => x.销售额)</td>
+                                                    <td>
+                                                        @{
+                                                            var firstOrDefault = @group.FirstOrDefault();
+                                                        }
+                                                        @if (firstOrDefault != null)
+                                                        {
+                                                            @firstOrDefault.同比
+                                                        }
+                                                    </td>
+                                                    <td>
+
+                                                        @{
+                                                            var orDefault = @group.FirstOrDefault();
+                                                        }
+                                                        @if (orDefault != null)
+                                                        {
+                                                            @orDefault.环比
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                                }
+                                                            }
+                    }
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script>
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+			(function($) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});
+				var segmentedControl = document.getElementById('segmentedControl');
+				$('.mui-input-group').on('change', 'input', function() {
+					if (this.checked) {
+						var styleEl = document.querySelector('input[name="style"]:checked');
+						var colorEl = document.querySelector('input[name="color"]:checked');
+						if (styleEl && colorEl) {
+							var style = styleEl.value;
+							var color = colorEl.value;
+							segmentedControl.className = 'mui-segmented-control' + (style ? (' mui-segmented-control-' + style) : '') + ' mui-segmented-control-' + color;
+						}
+					}
+				});
+			})(mui);
+    </script>
+</body>
+</html>

@@ -16,6 +16,12 @@ namespace KangHui.Web.Controllers
             return View();
         }
 
+        public ActionResult YueBaoIndex2()
+        {
+            IQueryable<YueBao> data = db.YueBao;
+            return View(data.ToList());
+        }
+
         public ActionResult YueBaoIndex()
         {
             IQueryable<YueBao> list = db.YueBao;
